@@ -1,0 +1,87 @@
+<html>
+	<head>
+		<title>data-x alpha</title>
+		<script type="text/javascript" src="js/dataX.js"></script>
+		<script type="text/javascript" src="js/dataX.parse.js"></script>
+		<script type="text/javascript" src="js/dataX.ViewBuilder.js"></script>
+		<script type="text/javascript" src="js/dataX.high.js"></script>
+	</head>
+	<body>
+<h1>data-x alpha</h1>
+<p>
+Light-weight MVC toolset.
+	<ul>
+		<li>Uses DOM to parse data-x attributes</li>
+		<li>Controllers can be any object</li>
+		<li>JavaScript can be used anywhere in a view or bind.</li>
+		<li>Views are parsed into re-usable classes.</li>
+	</ul>
+</p>
+<div>
+	<h2>swatches</h2>
+	<p>This example shows a <i>data-x-bind</i> and the <i>@</i> designation to
+		run an each loop.
+	</p>
+	<div class='data-x-example'>
+		<script type="text/javascript">
+		function rColor() {
+			var r = Math.floor(Math.random() * 0xFFFFFF);
+			var h = r.toString(16);
+			return "#" + "000000".substr(h.length) + h;
+		}
+
+		function randomColors(){
+			var colors = [];
+			for (var i = 0; i < 16; i++) colors.push(rColor());
+			dataX.set('demo.colors', colors);
+		}
+
+		function removeColor(c) {
+			var colors = [];
+			for (var i = 0; i < myColors.length; i++) {
+				if (myColors[i] != c) colors.push(myColors[i]);
+			}
+			dataX.set("myColors", colors);
+		}
+
+		var myColors = [];
+		randomColors();
+		</script>
+		
+		<style>
+		ul.colors {list-style-type:none;}
+		ul.colors > li {
+			display:inline-block;
+			width:25px;
+			height:25px;
+			cursor:pointer;
+		}
+		</style>
+
+		<ul data-x-bind="@demo.colors:c" class='colors'>
+			<li style="background-color:{{c}}"
+				title="{{c}}"
+				onclick="myColors.push('{{c}}');dataX.set('myColors');"></li>
+		</ul>
+
+		<ul data-x-bind="@myColors:c" class='colors'>
+			<!-- TODO: confused data-x-onclick with data-el-onclick. should we have data-el? -->
+			<li style="background-color:{{c}}"
+			title="{{c}}"
+			onclick="removeColor('{{c}}');"
+			></li>
+		</ul>
+
+		<button onclick="randomColors()">Random Colors</button>
+	</div>
+</div>
+
+
+<script type="text/javascript">
+xoHigh.viewSrc();
+xoHigh.xoExample();
+dataX.init();
+</script>
+
+	</body>
+</html>
