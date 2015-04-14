@@ -1,0 +1,17 @@
+body {
+	margin:0;
+	padding:0;
+}
+
+#header {
+	background-color:#FAFAFA;
+	border-bottom:1px solid #CCCCCC;
+}
+
+#header-container {
+	padding:25px 0;
+}
+.container {
+	margin:0 auto;
+	width:960px;
+}

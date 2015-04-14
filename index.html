@@ -1,13 +1,27 @@
 <html>
 	<head>
 		<title>data-x alpha</title>
-		<script type="text/javascript" src="js/dataX.js"></script>
-		<script type="text/javascript" src="js/dataX.parse.js"></script>
-		<script type="text/javascript" src="js/dataX.ViewBuilder.js"></script>
-		<script type="text/javascript" src="js/dataX.high.js"></script>
+		<script type="text/javascript" src="data-x/data-x.min.js"></script>
+		<script type="text/javascript" src='data-x/src/dataX.high.js'></script>
+		<!-- ViewBuilder cannot be minified. -->
+		<!--
+		<script type="text/javascript" src="data-x/src/dataX.js"></script>
+		<script type="text/javascript" src="data-x/src/dataX.parse.js"></script>
+		<script type="text/javascript" src="data-x/src/dataX.ViewBuilder.js"></script>
+		<script type="text/javascript" src="data-x/src/dataX.high.js"></script>
+		-->
+		<link rel="stylesheet" media="all" href="style.css"></link>
 	</head>
 	<body>
-<h1>data-x alpha</h1>
+
+<div id="header">
+	<div class='container' id="header-container">
+		<h1>data-x alpha</h1>
+		<a href="https://github.com/wolfhammer/data-x">https://github.com/wolfhammer/data-x</a>
+	</div>
+</div>
+
+<div id="body"><div class='container'>
 <p>
 Light-weight MVC toolset.
 	<ul>
@@ -75,13 +89,13 @@ Light-weight MVC toolset.
 		<button onclick="randomColors()">Random Colors</button>
 	</div>
 </div>
-
+</div><!--.container -->
+</div><!-- #body -->
 
 <script type="text/javascript">
 xoHigh.viewSrc();
 xoHigh.xoExample();
 dataX.init();
 </script>
-
 	</body>
 </html>
