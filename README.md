@@ -14,3 +14,7 @@ Goals
 - Translations.
 - Work with other frameworks and libraries.
 - Allow for full access to JavaScript in views/templates.
+
+Questions
+
+- Should we stick with {{...}} variabl/javascript replacement or switch to ${...} ?
