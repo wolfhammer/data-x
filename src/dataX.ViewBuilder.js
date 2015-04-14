@@ -1,5 +1,5 @@
 //parse.parseView = function(el);
-var dataX = window.dataX;
+//var dataX = window.dataX;
 //var parse = dataX.parse;
 function ViewBuilder(el) {
 	this.el = el;
@@ -187,7 +187,7 @@ ViewBuilder.prototype.parseAttrs = function() {
 			arr: parts[0],
 			item: parts[1],
 			name: parts[0].replace(/\./g,"_") // array name for iter and len
-		}, ViewBuilder.eachTemplate).split('//TPL_SPLIT');
+		}, ViewBuilder.eachTemplate).split('TPL_SPLIT');
 		el.insertAdjacentHTML('afterbegin', dataX.parse.toCommentScript(parts[0]));
 		el.insertAdjacentHTML('beforeend', dataX.parse.toCommentScript(parts[1]));
 	}
@@ -282,7 +282,7 @@ ViewBuilder.prototype.bindList = function(varName, el, isBaseElement) {
     }
     */
 
-    var parts = dataX.parse.setTPL(reps, ViewBuilder.bindTemplate).split('//TPL_SPLIT');
+    var parts = dataX.parse.setTPL(reps, ViewBuilder.bindTemplate).split('TPL_SPLIT');
     el.insertAdjacentHTML('afterbegin', dataX.parse.toCommentScript(parts[0]));
     el.insertAdjacentHTML('beforeend', dataX.parse.toCommentScript(parts[1]));
     this.bindEl(reps.varname, el, true, isBaseElement);
@@ -362,9 +362,9 @@ ViewBuilder.bindTemplate = dataX.parse.tplFn(function () {
 	}
 	  
 	for (_index_; _index_ < _len_; _index_++){
-		//TPL_filter
+		TPL_filter
 		var TPL_itemname = _items_[_index_];
-		//TPL_SPLIT
+		TPL_SPLIT
 	}
 
 	if (_single_ === true) {
@@ -378,7 +378,7 @@ ViewBuilder.bindTemplate = dataX.parse.tplFn(function () {
 ViewBuilder.eachTemplate = dataX.parse.tplFn(function() {
 	for (var TPL_item_i=0,TPL_item_len=TPL_arr.length; TPL_item_i < TPL_item_len; TPL_item_i++) {
 		var TPL_item = TPL_arr[TPL_item_i];
-		//TPL_SPLIT
+		TPL_SPLIT
 	}
 });
 
@@ -433,7 +433,7 @@ ViewBuilder.viewTemplate = dataX.parse.tplFn(function() {
   *******************************/
 
   TPL_namespace.prototype.render = function() {
-	//TPL_render
+	TPL_render
   };
 
   TPL_namespace.prototype.getData = function(defaults) {

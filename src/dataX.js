@@ -22,18 +22,6 @@ function DataX() {
     return;
   }
 
-  // TODO: preload language files
-  this.lang['tonyb.views.Todo'] = {};
-  this.lang['tonyb.views.Todo']['spa']={
-    //input_title: "¿Qué hay que hacer?",
-    input_title: [1508378547,"¿Qué hay que hacer?"],
-    mark_complete:[0,"Marcar todos como completa"],
-    all:[0,"Todo"],
-    active:[0,"Activo"],
-    completed:[0,"Terminado"],
-    clear_completed:[0,"Borrar {0}"]
-  };
-
   this.locale = "eng";
   // use getByAttr for this browser
   this.getByAttr = ('querySelectorAll' in document) ? this.getByAttrQS : this.getByAttrFB;

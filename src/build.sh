@@ -1,6 +1,7 @@
 #!/bin/bash
+# Using closure. http://dl.google.com/closure-compiler/compiler-latest.zip
 d=`pwd`
-files="dataX.js dataX.parse.js dataX.ViewBuilder.js dataX.high.js"
+files="dataX.js dataX.parse.js"
 minfile="data-x.min.js"
 mapfile="$minfile.map"
 
@@ -18,6 +19,7 @@ java -jar ./closure/compiler.jar \
   --js_output_file $minfile
 
 echo "Adding mapfile delclaration to end of minfile."
+cat dataX.ViewBuilder.js >> $minfile
 echo "//@ sourceMappingURL=${mapfile}" >> $minfile
 mv $minfile ..
 mv $mapfile ..

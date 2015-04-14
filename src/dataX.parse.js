@@ -8,6 +8,7 @@ function ParseDataX() {
 
 // creates comment script <!--? str ?--> with escaped -- as -\-
 ParseDataX.prototype.toCommentScript = function (str) {
+	if (typeof str === "undefined") return "";
 	return "<!--? " + str.replace(/--/g,'-\\-') + " ?-->"
 };
 
@@ -229,7 +230,7 @@ ParseDataX.prototype.setTPL = function(vars, tplSrc) {
 	var keys=[];
 	for (k in vars) keys.push(k);
 	var str = 'TPL_(' + keys.join('|') + ')';
-	var re = new RegExp('//' + str + '|' + str,'g')
+	var re = new RegExp(str,'g')
 	return tplSrc.replace(re, function(match, $1) {
 		for (k in vars) if ($1 === k) return vars[k];
 		return $1
