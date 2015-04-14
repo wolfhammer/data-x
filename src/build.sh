@@ -1,6 +1,6 @@
 #!/bin/bash
 d=`pwd`
-files="dataX.js dataX.ViewBuilder.js dataX.parse.js dataX.high.js"
+files="dataX.js dataX.parse dataX.ViewBuilder.js dataX.high.js"
 minfile="data-x.min.js"
 mapfile="$minfile.map"
 
