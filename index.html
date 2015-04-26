@@ -31,6 +31,90 @@ Light-weight MVC toolset.
 		<li>Views are parsed into re-usable classes.</li>
 	</ul>
 </p>
+
+<div>
+	<h2>data-x-bind</h2>
+	<div class='data-x-example'>
+		<p data-x-bind="currentTime">{{currentTime}}</p>
+		<button onclick="dataX.set('currentTime', new Date())">Get Time</button>
+		<script type="text/javascript">
+			dataX.set('currentTime', new Date());
+		</script>
+	</div>
+</div>
+
+<div>
+	<h2>data-x-view, data-x-ctrl, data-x-viewtype</h2>
+	<div class='data-x-example'>
+		<div data-x-view="hand" data-x-ctrl="myHand">
+		<ul class='cards' data-x-each="_ctrl_.cards:card">
+			<li data-el-class='card_{{card.suit}}'>{{card.rank}} {{'&'+card.suit+';'}}</li>
+		</ul>
+		</div>
+
+		<div data-x-viewtype="hand" data-x-ctrl="cpuHand"></div>
+		<style>
+		ul.cards {
+			list-style-type:none;
+		}
+		ul.cards > li {
+			border:1px solid #999999;
+			border-radius:3px 3px 0 0;
+			height:25px;
+			display:inline-block;
+			width:45px;
+			line-height:28px;
+			text-align:center;
+
+		}
+		.card_diams, .card_hearts {color:red;}
+		</style>
+		<script type="text/javascript">
+
+		function Deck() {
+			this.cards = [];
+			this.suits = ['clubs','hearts', 'spades', 'diams'];
+			var len = this.suits.length;
+			for (var i = 0; i < len; i++) {
+				for (var j = 1; j < 14; j++) {
+					this.cards.push({rank: j, suit: this.suits[i]});
+				}
+			}
+			this.shuffle();
+		}
+
+		Deck.prototype.shuffle = function() {
+			var len = this.cards.length;
+			var i = len;
+			while (--i >= 0) {
+				var swap = Math.floor(Math.random() * len);
+				var card = this.cards[i];
+				this.cards[i] = this.cards[swap];
+				this.cards[swap] = card;
+			}
+		}
+
+		Deck.prototype.draw = function() {
+			return this.cards.pop();
+		}
+
+		Deck.prototype.deal = function(n) {
+			var hand = []
+			while (n-->0) hand.push(this.draw());
+			return hand;
+		}
+		var deck = new Deck();
+		deck.shuffle();
+		var myHand = {};
+		var cpuHands = {};
+		dataX.set('myHand.cards', deck.deal(5));
+		dataX.set('cpuHand.cards', deck.deal(5));
+
+		</script>
+
+	</div>
+</div>
+
 <div>
 	<h2>swatches</h2>
 	<p>This example shows a <i>data-x-bind</i> and the <i>@</i> designation to
@@ -38,55 +122,50 @@ Light-weight MVC toolset.
 	</p>
 	<div class='data-x-example'>
 		<script type="text/javascript">
-		function rColor() {
-			var r = Math.floor(Math.random() * 0xFFFFFF);
-			var h = r.toString(16);
-			return "#" + "000000".substr(h.length) + h;
-		}
-
-		function randomColors(){
-			var colors = [];
-			for (var i = 0; i < 16; i++) colors.push(rColor());
-			dataX.set('demo.colors', colors);
-		}
-
-		function removeColor(c) {
-			var colors = [];
-			for (var i = 0; i < myColors.length; i++) {
-				if (myColors[i] != c) colors.push(myColors[i]);
+		function randomColors(n){
+			for (var colors = []; n-- > 0;) {
+				var h = Math.floor(Math.random() * 0xFFFFFF).toString(16);
+				colors.push("#" + "000000".substr(h.length) + h.toUpperCase());
 			}
-			dataX.set("myColors", colors);
+			return colors;
 		}
 
 		var myColors = [];
-		randomColors();
+		dataX.set('demo.colors', randomColors(8));
 		</script>
 		
 		<style>
 		ul.colors {list-style-type:none;}
 		ul.colors > li {
 			display:inline-block;
-			width:25px;
-			height:25px;
+			text-align:center;
+			font-size:12px;
+		}
+		ul.colors > li > div {
+			width:50;
+			height:50;
+			margin:0 auto;
 			cursor:pointer;
 		}
 		</style>
 
 		<ul data-x-bind="@demo.colors:c" class='colors'>
-			<li style="background-color:{{c}}"
-				title="{{c}}"
-				onclick="myColors.push('{{c}}');dataX.set('myColors');"></li>
+			<li>
+				<div data-el-style="background-color:{{c}}"
+				onclick="myColors.push('{{c}}');dataX.set('myColors');">&nbsp;</div>
+				{{c.substr(1)}}
+			</li>
 		</ul>
 
 		<ul data-x-bind="@myColors:c" class='colors'>
-			<!-- TODO: confused data-x-onclick with data-el-onclick. should we have data-el? -->
-			<li style="background-color:{{c}}"
-			title="{{c}}"
-			onclick="removeColor('{{c}}');"
-			></li>
+			<li>
+				<div data-el-style="background-color:{{c}}"
+				 onclick="myColors.splice({{_index_}},1);dataX.set('myColors');">&nbsp;</div>
+				{{c.substr(1)}}
+			</li>
 		</ul>
 
-		<button onclick="randomColors()">Random Colors</button>
+		<button onclick="dataX.set('demo.colors', randomColors(8))">Random Colors</button>
 	</div>
 </div>
 </div><!--.container -->

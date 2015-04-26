@@ -1,11 +1,20 @@
 body {
 	margin:0;
 	padding:0;
+	font-family:Sans-serif;
+	color:#222222;
+}
+
+a {
+	color:#33AACC;
 }
 
 #header {
-	background-color:#FAFAFA;
-	border-bottom:1px solid #CCCCCC;
+	background-color:#000000;
+	color:#CCCCCC;
+}
+#header h1 {
+	font-weight:normal;
 }
 
 #header-container {
