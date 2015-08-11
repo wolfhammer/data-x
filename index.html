@@ -46,13 +46,16 @@ Light-weight MVC toolset.
 <div>
 	<h2>data-x-view, data-x-ctrl, data-x-viewtype</h2>
 	<div class='data-x-example'>
+		<!-- define a view called "hand" and assign it a controller / data object. -->
 		<div data-x-view="hand" data-x-ctrl="myHand">
 		<ul class='cards' data-x-each="_ctrl_.cards:card">
 			<li data-el-class='card_{{card.suit}}'>{{card.rank}} {{'&'+card.suit+';'}}</li>
 		</ul>
 		</div>
 
+		<!-- re-use the view "hand" with a different controller / dataset -->
 		<div data-x-viewtype="hand" data-x-ctrl="cpuHand"></div>
+		
 		<style>
 		ul.cards {
 			list-style-type:none;
@@ -131,7 +134,22 @@ Light-weight MVC toolset.
 		}
 
 		var myColors = [];
-		dataX.set('demo.colors', randomColors(8));
+		var demoColors = randomColors(8);
+		// TODO: make the initial demoColors take to the databind.
+		// Orphaned binds need to be initialized.
+
+		// TODO: Make a special splicing function that will remove
+		// only the spliced element from array binds.  This will make
+		// it so the page won't have to re-render the other elements.
+		// dataX.splice('myColors',index,count);
+		// dataX.setIndex('myColors',index,opt-value).
+		// bound arrays will need ids for indexes.  when array items
+		// are changed the doc is search for data-x-id to replace items.
+		// ['a','b','c'].indexes=['myvar.0','myvar.1','myvar.2']
+		// dataX.splice('myvar',0,1); // find myvar.0s and remove
+		// dataX.push('myvar','d');
+		// myvar.nextId = myvar.length; // initial next id.
+		// ['b','c','d'].indexes=['myvar.1','myvar.2','myvar.3'];
 		</script>
 		
 		<style>
@@ -149,8 +167,8 @@ Light-weight MVC toolset.
 		}
 		</style>
 
-		<ul data-x-bind="@demo.colors:c" class='colors'>
-			<li>
+		<ul data-x-bind="@demoColors:c" class='colors'>
+			<li id="_ctrl_-_bind_-_index">
 				<div data-el-style="background-color:{{c}}"
 				onclick="myColors.push('{{c}}');dataX.set('myColors');">&nbsp;</div>
 				{{c.substr(1)}}
@@ -165,7 +183,7 @@ Light-weight MVC toolset.
 			</li>
 		</ul>
 
-		<button onclick="dataX.set('demo.colors', randomColors(8))">Random Colors</button>
+		<button onclick="dataX.set('demoColors', randomColors(8))">Random Colors</button>
 	</div>
 </div>
 </div><!--.container -->
