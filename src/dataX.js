@@ -164,6 +164,7 @@ DataX.prototype.set = function(varName, val, skip, noqueue) {
     var numRefs = this.refId - refIdStart;
     
     if (numRefs > 0) {
+		console.log("numRefs = " + numRefs);
       // New references. Replaced element most likely had references.
       // Schedule cleanup if not scheduled.
       //dataX.ref.cleanup();
@@ -241,13 +242,13 @@ DataX.prototype.setItem = function(strVar, index, value) {
 // find parent with tagName of tag
 DataX.prototype.getParent = function(el, tag, isXML) {
   tag = (isXML !== true) ? tag.toUpperCase() : tag;
-  while ((el=el.parentElement) && el.tagName!==tag);
+  while ((el=el.parentElement) && el.tagName!==tag) {}
   return (el.tagName === tag) ? el : null;
 };
 
 // Returns true if c is a child of p else returns false;
 DataX.prototype.childOf = function(c, p){
-  while((c=c.parentNode)&&c!==p); 
+  while((c=c.parentNode)&&c!==p) {}
   return !!c; 
 };
 
