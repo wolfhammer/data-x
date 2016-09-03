@@ -52,7 +52,7 @@ xoHigh.prototype.re={
 xoHigh.addStyles = function() {
 	var style=(function(){/*START
 	<style>
-	pre.data-x-source {background-color:#f9f9f9;}
+	pre.data-x-source {background-color:#FAF9F7;}
 	div.tag {display:inline;color:#0000ff;}
 	span.keyword {font-weight:bold;color:#FF00FF;}
 	span.attr {color:#FF0000;}
