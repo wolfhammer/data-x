@@ -3,7 +3,7 @@
 //parse template into javascript function
 
 function ParseDataX() {
-
+	xlog('Creating a new ParseDataX...');
 };
 
 // creates comment script <!--? str ?--> with escaped -- as -\-
@@ -13,6 +13,7 @@ ParseDataX.prototype.toCommentScript = function (str) {
 };
 
 ParseDataX.prototype.init = function() {
+	xlog("running ParseDataX.init");
 	this.parseViews(document);
 };
 
@@ -40,7 +41,7 @@ ParseDataX.prototype.findOrphans = function(baseElement) {
 };
 
 ParseDataX.prototype.parseViews = function(baseElement) {
-
+	xlog("Running parseViews");
 	// list of element nodes that matched the query
 	var viewElements = dataX.getByAttr(baseElement, '[data-x-view]');
 
@@ -102,7 +103,7 @@ ParseDataX.prototype.commentScript = function(src, ViewClass) {
 	//src = src.replace(/\\*<!--\?([\s\S]*?)\?-->|\\*\$\{([^\}]*)\}/g, function(match, $1, $2, offset, original) {
 	//src = src.replace(/\\*<!--\?([\s\S]*?)\?-->|\\*\$\{([^~][^\}]*)\}|\\*\$\{~((?:[^~]|~[^}])*)~\}/g, function(match, $1, $2, $3, offset, original) {
 	//src = src.replace(/\\*<!--\?([\s\S]*?)\?-->|\\*\$\{([^\/][^}]*)}|\\*\$\{\/((?:[^\/]|\/[^}])*)\/}/g, function(match, $1, $2, $3, offset, original) {
-	src = src.replace(/\\*<!--\?(?:[\s\S]*?)\?-->|\\*\{\{(?:[^}\\]*|\\.)*\}\}/g,
+	src = src.replace(/\\*<!--\%(?:[\s\S]*?)\%-->|\\*\{\{(?:[^}\\]*|\\.)*\}\}/g,
 	function(match, offset, original) {
 		///\$({([^}\\]|\\.)*})*/g
 		var c0=match.charAt(0)

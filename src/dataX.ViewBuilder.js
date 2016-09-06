@@ -2,6 +2,7 @@
 //var dataX = window.dataX;
 //var parse = dataX.parse;
 function ViewBuilder(el) {
+	xlog("Running ViewBuilder");
 	this.el = el;
 
 	//The generated source will replace TPL_{vars.key} with the value of vars[key]
@@ -48,14 +49,17 @@ function ViewBuilder(el) {
 	src = dataX.parse.setTPL(TPL_vars, ViewBuilder.viewTemplate);
 
 	console.log(src);
-
+	// TODO: do a namespace check after writing script. If namespace does not
+	// appear then there was a problem.
 	try {
+		xlog("Wrting script to docuemnt.");
 		dataX.parsing++;
 		var script = document.createElement("script");
-		script.type="text/javascript";
+		script.setAttribute("type", "text/javascript");
 		try {
 			script.appendChild(document.createTextNode(src+'\ndataX.parsing--'));
 		} catch (e) {
+			xlog("Could not createTextNode for script. adding text as property.")
 			script.text = src+'\ndataX.parsing--';
 		}
 		document.body.appendChild(script);
@@ -75,7 +79,7 @@ ViewBuilder.prototype.parseAttrs = function() {
 		var el = list[i];
 		var value = el.getAttribute('data-on-dblclick');
 		value = "if (dataX.dbl(this)) \{ " + value + "; \}";
-		el.setAttribute('data-el-onclick', value); 
+		el.setAttribute('data-el-onclick', value);
 	}
 
 	var list = dataX.getByAttr(baseElement, '[data-x-checked]');
@@ -94,10 +98,10 @@ ViewBuilder.prototype.parseAttrs = function() {
 		var beginIf = "<!--?\n\tif (" + dataX.htmlDecode(el.getAttribute('data-x-if')) + ") { //data-x-if \n\t\t?-->";
 		var endIf = "<!--?\n\t}  //end data-x-if \n\n\t?-->";
 		el.insertAdjacentHTML('beforebegin', beginIf);
-	
+
 		var sib = el;
 		var last = el;
-	
+
 		while(sib !== null) {
 
 			sib = sib.nextSibling;
@@ -214,7 +218,7 @@ ViewBuilder.prototype.parseAttrs = function() {
 	} else if (js.substr(0,4) === 'else') {
 	  // Text can not be output between if and else statements.
 	  // If the prevous node is a text node clear text.(?non whitespace)
-	  if (el.previousSibling.nodeType === 3) { 
+	  if (el.previousSibling.nodeType === 3) {
 		el.previousSibling.nodeValue = "";
 	  }
 	  el.insertAdjacentHTML('beforebegin', beginJs);
@@ -225,7 +229,7 @@ ViewBuilder.prototype.parseAttrs = function() {
 	  el.insertAdjacentHTML('beforeend',endJs);
 	}
   }
-  
+
 	// bind elements to variables
 	var bindElements = dataX.getByAttr(baseElement, '[data-x-bind]');
 	var i = bindElements.length;
@@ -257,7 +261,7 @@ ViewBuilder.prototype.doBind = function(el, isBaseElement) {
 ViewBuilder.prototype.bindList = function(varName, el, isBaseElement) {
     // @varName:itemName - shorthand bind foreach
     var parts = varName.substring(1).split(':');
-    
+
     if (parts.length !== 2) {
     	console.log('Wrong bind syntax. ' + varName);
     	return;
@@ -319,7 +323,7 @@ ViewBuilder.prototype.bindEl = function(varName, el, hasLoop, isBaseElement) {
   var fnsrc = el.outerHTML;
   var id = el.getAttribute('id');
   var src  = "";
-  src = dataX.parse.commentScript(fnsrc, this); // Parse bind language to <?...?> for tmpl parser      
+  src = dataX.parse.commentScript(fnsrc, this); // Parse bind language to <?...?> for tmpl parser
   src = dataX.parse.tmpl(src, id); // Parse <?..?> to javascript
 
   if (localName !== null) {
@@ -360,7 +364,7 @@ ViewBuilder.bindTemplate = dataX.parse.tplFn(function () {
 		}
 		_len_ = _items_.length;
 	}
-	  
+
 	for (_index_; _index_ < _len_; _index_++){
 		TPL_filter
 		var TPL_itemname = _items_[_index_];
@@ -387,7 +391,7 @@ ViewBuilder.eachTemplate = dataX.parse.tplFn(function() {
 ViewBuilder.viewTemplate = dataX.parse.tplFn(function() {
   /*******************************
   * xo compiled view
-  * TPL_namespace 
+  * TPL_namespace
   *******************************/
 
   dataX.namespace('TPL_namespace', function(el,controller) {
@@ -416,9 +420,9 @@ ViewBuilder.viewTemplate = dataX.parse.tplFn(function() {
 		  var d = dataX.dot(el.getAttribute('data-x-init'));
 		  d.obj[d.key](this); // TODO: should we do a check for true / false to render the element?
 		}
-	  */ 
+	  */
 	}
-	
+
 	this.refresh();
   });
 
@@ -441,7 +445,7 @@ ViewBuilder.viewTemplate = dataX.parse.tplFn(function() {
   };
 
   /*******************************
-  * Translation 
+  * Translation
   *******************************/
 
   TPL_namespace.prototype.content = function(locale, key, refId) {

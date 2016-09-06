@@ -14,7 +14,12 @@ if (!String.prototype.trim) {
     return this.replace(/^\s+|\s+$/g, '');
   };
 }
-
+var xDebug = true;
+function xlog(str) {
+	if (xDebug) {
+		console.log("data-x: " + str);
+	}
+}
 function DataX() {
 
   if (typeof window.dataX !== 'undefined'){
@@ -125,7 +130,7 @@ DataX.prototype.set = function(varName, val, skip, noqueue) {
     this.queueSet.push([varName, val, skip]);
     return;
   }
-  
+
   // TODO: initial binds should register elements for updates. searching the doc shouldn't be needed.
   var bindToElements = this.getByAttr(document, '[data-x-bindto="' + varName + '"]');
 
@@ -149,7 +154,7 @@ DataX.prototype.set = function(varName, val, skip, noqueue) {
     } else {
       var data_x_id = null;
     }
-  
+
     var d = this.dot(bindFn);
     var fn = d.obj[d.key];
 
@@ -159,10 +164,10 @@ DataX.prototype.set = function(varName, val, skip, noqueue) {
     } else {
       console.log('bindfn=' + bindFn);
     }
-    
+
     var newHTML = d.obj[d.key]();
     var numRefs = this.refId - refIdStart;
-    
+
     if (numRefs > 0) {
 		console.log("numRefs = " + numRefs);
       // New references. Replaced element most likely had references.
@@ -204,7 +209,7 @@ DataX.prototype.setItem = function(strVar, index, value) {
   var dotItem = this.dot(strVar);
   index = index.toString();
 
-  if (typeof value !== "undefined") {  
+  if (typeof value !== "undefined") {
     dotItem.obj[dotItem.key][index] = value;
   }
 
@@ -249,7 +254,7 @@ DataX.prototype.getParent = function(el, tag, isXML) {
 // Returns true if c is a child of p else returns false;
 DataX.prototype.childOf = function(c, p){
   while((c=c.parentNode)&&c!==p) {}
-  return !!c; 
+  return !!c;
 };
 
 DataX.prototype.getTarget = function(e) {
@@ -349,7 +354,7 @@ DataX.prototype.afterParse = function() {
 
     var d = this.dot(viewName);
     var view = d.obj[d.key];
-    
+
     if (ctrlName === "" || ctrlName === "null") {
       ctrl = null
     } else {
@@ -371,8 +376,8 @@ DataX.prototype.afterParse = function() {
       console.log('ERROR: ' + str);
       console.log(err);
     }
-    
-  } 
+
+  }
 
   // Items may still be queueing while loop is going on..
   // check length every time.
@@ -385,6 +390,7 @@ DataX.prototype.afterParse = function() {
 };
 
 DataX.prototype.init = function() {
+	xlog('Inside of DataX.init');
   this.parsing=0;
   if (typeof this.parse !== "undefined") {
     // TODO: make sure parser is not required for deployment
@@ -445,6 +451,7 @@ DataX.prototype.htmlDecode = function(s) {
 // Creates window.myNamespace.obj
 // Sets window.myNamespace.obj = 'myvalue';
 DataX.prototype.namespace = function (n,v) {
+	xlog("Creating namespace '" + n + "'");
   var o = window;
   var parts = n.split(".");
   var len = (parts.length - 1);
@@ -456,7 +463,7 @@ DataX.prototype.namespace = function (n,v) {
     // it exists else create a new object.
     o = (p in o) ? o[p] : o[p] = {};
   }
-  
+
   // Set a value if it exists else create an object for the last part.
   o[parts[i]] = (typeof v !== 'undefined') ? v : {};
 };
@@ -495,11 +502,11 @@ DataX.prototype.refCleanupNow = function() {
 
   // Find all refs (dataX.refs.Rnn_) and add to keep.
   var markup = document.documentElement.innerHTML;
-  var keep = {};    
+  var keep = {};
   markup.replace(/dataX\.ids\.(R[0-9]*_)/g, function(match, $1) {
     keep[$1] = this.ids[$1];
   });
-  
+
   // Reset refs to only refs in doc.
   this.ids = keep;
 
@@ -514,7 +521,7 @@ DataX.prototype.item = function(str) {
   return str.replace(/\[([0-9]*)\]/g, ".$1");
 };
 
-  
+
 DataX.prototype.instance = function(obj) {
     this.inst.push(obj);
     return 'dataX.inst.' + (this.inst.length-1);
