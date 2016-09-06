@@ -1,0 +1,198 @@
+<html>
+	<head>
+		<title>data-x alpha</title>
+		<script type="text/javascript" src="data-x/data-x.min.js"></script>
+		<script type="text/javascript" src='data-x/src/dataX.high.js'></script>
+		<!-- ViewBuilder cannot be minified. -->
+		<!--
+		<script type="text/javascript" src="data-x/src/dataX.js"></script>
+		<script type="text/javascript" src="data-x/src/dataX.parse.js"></script>
+		<script type="text/javascript" src="data-x/src/dataX.ViewBuilder.js"></script>
+		<script type="text/javascript" src="data-x/src/dataX.high.js"></script>
+		-->
+		<link rel="stylesheet" media="all" href="style.css"></link>
+	</head>
+	<body>
+
+<div id="header">
+	<div class='container' id="header-container">
+		<h1>data-x alpha</h1>
+		<a href="https://github.com/wolfhammer/data-x">https://github.com/wolfhammer/data-x</a>
+	</div>
+</div>
+
+<div id="body"><div class='container'>
+<p>
+Light-weight MVC toolset.
+	<ul>
+		<li>Uses DOM to parse data-x attributes</li>
+		<li>Controllers can be any object</li>
+		<li>JavaScript can be used anywhere in a view or bind.</li>
+		<li>Views are parsed into re-usable classes.</li>
+	</ul>
+</p>
+
+<div>
+	<h2>data-x-bind</h2>
+	<div class='data-x-example'>
+		<p data-x-bind="currentTime">{{currentTime}}</p>
+		<button onclick="dataX.set('currentTime', new Date())">Get Time</button>
+		<script type="text/javascript">
+			dataX.set('currentTime', new Date());
+		</script>
+	</div>
+</div>
+
+<div>
+	<h2>data-x-view, data-x-ctrl, data-x-viewtype</h2>
+	<div class='data-x-example'>
+		<!-- define a view called "hand" and assign it a controller / data object. -->
+		<div data-x-view="hand" data-x-ctrl="myHand">
+		<ul class='cards' data-x-each="_ctrl_.cards:card">
+			<li data-el-class='card_{{card.suit}}'>{{card.rank}} {{'&'+card.suit+';'}}</li>
+		</ul>
+		</div>
+
+		<!-- re-use the view "hand" with a different controller / dataset -->
+		<div data-x-viewtype="hand" data-x-ctrl="cpuHand"></div>
+		
+		<style>
+		ul.cards {
+			list-style-type:none;
+		}
+		ul.cards > li {
+			border:1px solid #999999;
+			border-radius:3px 3px 0 0;
+			height:25px;
+			display:inline-block;
+			width:45px;
+			line-height:28px;
+			text-align:center;
+
+		}
+		.card_diams, .card_hearts {color:red;}
+		</style>
+		<script type="text/javascript">
+
+		function Deck() {
+			this.cards = [];
+			this.suits = ['clubs','hearts', 'spades', 'diams'];
+			var len = this.suits.length;
+			for (var i = 0; i < len; i++) {
+				for (var j = 1; j < 14; j++) {
+					this.cards.push({rank: j, suit: this.suits[i]});
+				}
+			}
+			this.shuffle();
+		}
+
+		Deck.prototype.shuffle = function() {
+			var len = this.cards.length;
+			var i = len;
+			while (--i >= 0) {
+				var swap = Math.floor(Math.random() * len);
+				var card = this.cards[i];
+				this.cards[i] = this.cards[swap];
+				this.cards[swap] = card;
+			}
+		}
+
+		Deck.prototype.draw = function() {
+			return this.cards.pop();
+		}
+
+		Deck.prototype.deal = function(n) {
+			var hand = []
+			while (n-->0) hand.push(this.draw());
+			return hand;
+		}
+		var deck = new Deck();
+		deck.shuffle();
+		var myHand = {};
+		var cpuHands = {};
+		dataX.set('myHand.cards', deck.deal(5));
+		dataX.set('cpuHand.cards', deck.deal(5));
+
+		</script>
+
+	</div>
+</div>
+
+<div>
+	<h2>swatches</h2>
+	<p>This example shows a <i>data-x-bind</i> and the <i>@</i> designation to
+		run an each loop.
+	</p>
+	<div class='data-x-example'>
+		<script type="text/javascript">
+		function randomColors(n){
+			for (var colors = []; n-- > 0;) {
+				var h = Math.floor(Math.random() * 0xFFFFFF).toString(16);
+				colors.push("#" + "000000".substr(h.length) + h.toUpperCase());
+			}
+			return colors;
+		}
+
+		var myColors = [];
+		var demoColors = randomColors(8);
+		// TODO: make the initial demoColors take to the databind.
+		// Orphaned binds need to be initialized.
+
+		// TODO: Make a special splicing function that will remove
+		// only the spliced element from array binds.  This will make
+		// it so the page won't have to re-render the other elements.
+		// dataX.splice('myColors',index,count);
+		// dataX.setIndex('myColors',index,opt-value).
+		// bound arrays will need ids for indexes.  when array items
+		// are changed the doc is search for data-x-id to replace items.
+		// ['a','b','c'].indexes=['myvar.0','myvar.1','myvar.2']
+		// dataX.splice('myvar',0,1); // find myvar.0s and remove
+		// dataX.push('myvar','d');
+		// myvar.nextId = myvar.length; // initial next id.
+		// ['b','c','d'].indexes=['myvar.1','myvar.2','myvar.3'];
+		</script>
+		
+		<style>
+		ul.colors {list-style-type:none;}
+		ul.colors > li {
+			display:inline-block;
+			text-align:center;
+			font-size:12px;
+		}
+		ul.colors > li > div {
+			width:50;
+			height:50;
+			margin:0 auto;
+			cursor:pointer;
+		}
+		</style>
+
+		<ul data-x-bind="@demoColors:c" class='colors'>
+			<li id="_ctrl_-_bind_-_index">
+				<div data-el-style="background-color:{{c}}"
+				onclick="myColors.push('{{c}}');dataX.set('myColors');">&nbsp;</div>
+				{{c.substr(1)}}
+			</li>
+		</ul>
+
+		<ul data-x-bind="@myColors:c" class='colors'>
+			<li>
+				<div data-el-style="background-color:{{c}}"
+				 onclick="myColors.splice({{_index_}},1);dataX.set('myColors');">&nbsp;</div>
+				{{c.substr(1)}}
+			</li>
+		</ul>
+
+		<button onclick="dataX.set('demoColors', randomColors(8))">Random Colors</button>
+	</div>
+</div>
+</div><!--.container -->
+</div><!-- #body -->
+
+<script type="text/javascript">
+xoHigh.viewSrc();
+xoHigh.xoExample();
+dataX.init();
+</script>
+	</body>
+</html>
