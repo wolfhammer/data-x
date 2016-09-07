@@ -1,15 +1,15 @@
-//parse view into comment script <!--? javascript ?--> ${js} ${=js} ${#js}
-//parse comment script into template <?js?> <?=js?> <?==js?> <?#js?>
+//parse view into comment script <!--% javascript %--> ${js} ${=js} ${#js}
+//parse comment script into template <%js%> <%=js%> <%==js%> <%#js%>
 //parse template into javascript function
 
 function ParseDataX() {
 	xlog('Creating a new ParseDataX...');
 };
 
-// creates comment script <!--? str ?--> with escaped -- as -\-
+// creates comment script <!--% str %--> with escaped -- as -\-
 ParseDataX.prototype.toCommentScript = function (str) {
 	if (typeof str === "undefined") return "";
-	return "<!--? " + str.replace(/--/g,'-\\-') + " ?-->"
+	return "<!--% " + str.replace(/--/g,'-\\-') + " %-->"
 };
 
 ParseDataX.prototype.init = function() {
@@ -100,9 +100,9 @@ ParseDataX.prototype.commentScript = function(src, ViewClass) {
 
 	// Commented js will escape -- with -\-. Change back to --.
 	// {...} will convert only if there is no ';' or '{'
-	//src = src.replace(/\\*<!--\?([\s\S]*?)\?-->|\\*\$\{([^\}]*)\}/g, function(match, $1, $2, offset, original) {
-	//src = src.replace(/\\*<!--\?([\s\S]*?)\?-->|\\*\$\{([^~][^\}]*)\}|\\*\$\{~((?:[^~]|~[^}])*)~\}/g, function(match, $1, $2, $3, offset, original) {
-	//src = src.replace(/\\*<!--\?([\s\S]*?)\?-->|\\*\$\{([^\/][^}]*)}|\\*\$\{\/((?:[^\/]|\/[^}])*)\/}/g, function(match, $1, $2, $3, offset, original) {
+	//src = src.replace(/\\*<!--\?([\s\S]*?)\%-->|\\*\$\{([^\}]*)\}/g, function(match, $1, $2, offset, original) {
+	//src = src.replace(/\\*<!--\?([\s\S]*?)\%-->|\\*\$\{([^~][^\}]*)\}|\\*\$\{~((?:[^~]|~[^}])*)~\}/g, function(match, $1, $2, $3, offset, original) {
+	//src = src.replace(/\\*<!--\?([\s\S]*?)\%-->|\\*\$\{([^\/][^}]*)}|\\*\$\{\/((?:[^\/]|\/[^}])*)\/}/g, function(match, $1, $2, $3, offset, original) {
 	src = src.replace(/\\*<!--\%(?:[\s\S]*?)\%-->|\\*\{\{(?:[^}\\]*|\\.)*\}\}/g,
 	function(match, offset, original) {
 		///\$({([^}\\]|\\.)*})*/g
@@ -126,10 +126,10 @@ ParseDataX.prototype.commentScript = function(src, ViewClass) {
 			// ${...} length-1, {{...}}length-2
 			match = match.substring(i+2, match.length-2);
 			if (match.charAt(0) === '#') {
-				return "<?" + match + "?>";
+				return "<%" + match + "%>";
 			} else if (match.substr(0,4) === 'VAR:') {
 				// ${VAR:n} - ViewClass.vars index for language variable substitution.
-				// Parses to <?=this.vars[n]=dataX.ref([var1,var2,etc])?>
+				// Parses to <%=this.vars[n]=dataX.ref([var1,var2,etc])%>
 				//
 				// Example:
 				// <p data-x-msg="hello">Hello ${firstName}!</p>
@@ -152,26 +152,26 @@ ParseDataX.prototype.commentScript = function(src, ViewClass) {
 				// syntax attribute:key and multiples with with ',' seperator.
 				// <p data-x-msg="hello,title:hi_title" title="Hello to you">Hello ${firstName}</p>
 				var index = parseInt(match.substr(4));
-				return "<?=this.vars["+index+"]=dataX.ref([" + ViewClass.vars[index].join(",") + "]).split('.')[2]?>"
+				return "<%=this.vars["+index+"]=dataX.ref([" + ViewClass.vars[index].join(",") + "]).split('.')[2]%>"
 			} else {
-				return "<?=" + dataX.htmlDecode(match) + "?>";
+				return "<%=" + dataX.htmlDecode(match) + "%>";
 			}
 		} else {
 			match = match.substring(i+5, match.length-4);
-			return "<?" + match.replace(/-\\-/g, "--") + "?>";
+			return "<%" + match.replace(/-\\-/g, "--") + "%>";
 		}
 	});
 	
 	return src;
 };
 
-// convert template <? ?> to javascript. 
+// convert template <% %> to javascript. 
 ParseDataX.prototype.tmpl = function(src, templateName) {
 	/* Template syntax when inside of
-	 * Javascript: <? // javascript ?>
-	 * Print raw value: <?=varname?>
-	 * Print html encoded value: <?==varname?>
-	 * Print reference to object <?#varname?>
+	 * Javascript: <% // javascript %>
+	 * Print raw value: <%=varname%>
+	 * Print html encoded value: <%==varname%>
+	 * Print reference to object <%#varname%>
 	 */
 			
 	var i = 0;
@@ -181,7 +181,7 @@ ParseDataX.prototype.tmpl = function(src, templateName) {
 	js += "\tvar RET = '";
 	var self = this;
 	// We use [\s\S] to get everything.
-	src.replace(/<\?([\s\S]*?)\?>/g, function(match, $1, offset){ //, original) {
+	src.replace(/<\%([\s\S]*?)\%>/g, function(match, $1, offset){ //, original) {
 		
 		var str = src.slice(i, offset); //.trim();
 		
@@ -190,9 +190,9 @@ ParseDataX.prototype.tmpl = function(src, templateName) {
 		switch($1.charAt(0)) {
 			
 			case '=': // add to text buffer
-				if ($1.charAt(1) === '=') { // encode html <?==myar?>
+				if ($1.charAt(1) === '=') { // encode html <%==myar%>
 					js += "' + dataX.htmlEncode(" + $1.slice(2) + ") + '";
-				} else { // raw <?=myvar?>
+				} else { // raw <%=myvar%>
 					js += "' + (" + $1.slice(1) + ") + '";
 				}
 				break;

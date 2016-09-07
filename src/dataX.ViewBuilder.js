@@ -28,14 +28,14 @@ function ViewBuilder(el) {
 	el.innerHTML = ""; // clear for doc view
 
 	try {
-		src = dataX.parse.commentScript(src, this); // Parse bind language to <?...?> for tmpl parser
+		src = dataX.parse.commentScript(src, this); // Parse bind language to <%...%> for tmpl parser
 	} catch (err) {
 		console.log("View '" + this.namespace + "': Error parsing view render.\n\n" + src);
 		throw(err);
 	}
 
 	try {
-		TPL_vars.render = dataX.parse.tmpl(src, this.namespace); // Parse <?..?> to javascript
+		TPL_vars.render = dataX.parse.tmpl(src, this.namespace); // Parse <%..%> to javascript
 	} catch (err) {
 		console.log("View '" + this.namespace + "': Error parsing template. \n\n" + src);
 		throw(err);
@@ -95,8 +95,8 @@ ViewBuilder.prototype.parseAttrs = function() {
 
 	for (var i = 0, len = list.length; i < len; i++) {
 		var el = list[i];
-		var beginIf = "<!--?\n\tif (" + dataX.htmlDecode(el.getAttribute('data-x-if')) + ") { //data-x-if \n\t\t?-->";
-		var endIf = "<!--?\n\t}  //end data-x-if \n\n\t?-->";
+		var beginIf = "<!--%\n\tif (" + dataX.htmlDecode(el.getAttribute('data-x-if')) + ") { //data-x-if \n\t\t%-->";
+		var endIf = "<!--%\n\t}  //end data-x-if \n\n\t%-->";
 		el.insertAdjacentHTML('beforebegin', beginIf);
 
 		var sib = el;
@@ -112,9 +112,9 @@ ViewBuilder.prototype.parseAttrs = function() {
 				var elseStr = sib.getAttribute('data-x-else');
 				if (elseStr !== "") {
 					// todo: clean code for comment script (-- to -\-)
-					beginElse = "<!--?\n\t} else if (" + dataX.htmlDecode(elseStr) + ") { // data-x-else \n\t\t?-->";
+					beginElse = "<!--%\n\t} else if (" + dataX.htmlDecode(elseStr) + ") { // data-x-else \n\t\t%-->";
 				} else {
-					beginElse = "<!--?\n\t} else { // data-x-else \n\t\t?-->";
+					beginElse = "<!--%\n\t} else { // data-x-else \n\t\t%-->";
 				}
 
 				sib.insertAdjacentHTML('beforebegin', beginElse);
@@ -131,7 +131,7 @@ ViewBuilder.prototype.parseAttrs = function() {
 
 	for (var i = 0, len = list.length; i < len; i++) {
 		var el = list[i];
-		var source = "<!--?" + el.innerHTML.replace(/--/g,"-\\-") + "?-->";
+		var source = "<!--%" + el.innerHTML.replace(/--/g,"-\\-") + "%-->";
 		el.outerHTML = source;
 	}
 
@@ -207,8 +207,8 @@ ViewBuilder.prototype.parseAttrs = function() {
 	var js = el.getAttribute('data-x-js'); // htmlDecode?
 	// Comments do not allow "--".
 	js = js.replace("--", "-\\-"); //.trim();
-	var beginJs = "<!--? " + js + " { ?-->";
-	var endJs = "<!--? } ?-->";
+	var beginJs = "<!--% " + js + " { %-->";
+	var endJs = "<!--% } %-->";
 
 	// if and else statments surround element.
 	if (js.substr(0,2) === 'if') {
@@ -323,8 +323,8 @@ ViewBuilder.prototype.bindEl = function(varName, el, hasLoop, isBaseElement) {
   var fnsrc = el.outerHTML;
   var id = el.getAttribute('id');
   var src  = "";
-  src = dataX.parse.commentScript(fnsrc, this); // Parse bind language to <?...?> for tmpl parser
-  src = dataX.parse.tmpl(src, id); // Parse <?..?> to javascript
+  src = dataX.parse.commentScript(fnsrc, this); // Parse bind language to <%...%> for tmpl parser
+  src = dataX.parse.tmpl(src, id); // Parse <%..%> to javascript
 
   if (localName !== null) {
     src = "var " + localName + " = " + varName + ";\n" + src;
