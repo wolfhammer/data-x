@@ -401,6 +401,11 @@ ViewBuilder.viewTemplate = dataX.parse.tplFn(function() {
 	this.locale=dataX.locale;
 	var self = this;
 
+	if (arguments.length === 1) {
+		var view = new TPL_namespace(null, arguments[0]);
+		return view.render();
+	}
+
 	if (typeof el !== "undefined" && el !== null) {
 	  this.el = el;
 	  el.setAttribute('data-x-id', this.id);
