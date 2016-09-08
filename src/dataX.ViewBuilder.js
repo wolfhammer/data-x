@@ -403,6 +403,7 @@ ViewBuilder.viewTemplate = dataX.parse.tplFn(function() {
 
 	if (arguments.length === 1) {
 		var view = new TPL_namespace(null, arguments[0]);
+		this.controller = arguments[0];
 		return view.render();
 	}
 
@@ -412,7 +413,7 @@ ViewBuilder.viewTemplate = dataX.parse.tplFn(function() {
 	  this.refresh = function() {self.el.innerHTML=self.render();};
 	} else {
 	  this.el = null;
-	  this.refresh = function() {return self.render();};
+	  this.refresh = function(__data) {return self.render(__data);};
 	}
 
 	if (typeof controller !== 'undefined' && controller !== null) {
@@ -442,7 +443,9 @@ ViewBuilder.viewTemplate = dataX.parse.tplFn(function() {
   *******************************/
 
   TPL_namespace.prototype.render = function() {
+	with (this.controller) {
 	TPL_render
+	}
   };
 
   TPL_namespace.prototype.getData = function(defaults) {
