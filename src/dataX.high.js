@@ -5,7 +5,7 @@ function xoHigh(str,init) {
 		xoHigh.addStyles();
 		return ""
 	}
-	return xoHigh.obj.color(str);	
+	return xoHigh.obj.color(str);
 }
 
 xoHigh.prototype.color = function(str) {
@@ -15,7 +15,7 @@ xoHigh.prototype.color = function(str) {
 
 	function tag(str) {
 		return str.replace(r.tag, function(match,x,s,tag,body,e){
-			return x+"<div class='tag'>"+s+"<span class='tag'>" + tag + '</span>' + body.replace(r.attr, "$1<span class='attr'>$2</span>$3<span class='value'>$4</span>")+e+'</div>'; 
+			return x+"<div class='tag'>"+s+"<span class='tag'>" + tag + '</span>' + body.replace(r.attr, "$1<span class='attr'>$2</span>$3<span class='value'>$4</span>")+e+'</div>';
 		});
 	}
 
@@ -27,7 +27,7 @@ xoHigh.prototype.color = function(str) {
 		newStr+="<span class='"+type+"'>" + com + "</span>";
 		return match;
 	});
-	
+
 	// get the final offset
 	newStr+=tag(str.substr(lastIndex));
 	// add zero width space to ${...} and data-el to prevent parsing
@@ -46,7 +46,7 @@ xoHigh.prototype.re={
 	com:/(\/\/.*$|&lt;!--(?:[^-]|-[^-])*--&gt;|\/\*(?:[^*]|\*[^\/])*\*\/)/gm,
 	set:/(dataX\.set\([^)]*\))/g,
 	keyword:/_(ctrl)_/g
-	
+
 };
 
 xoHigh.addStyles = function() {
@@ -83,7 +83,7 @@ xoHigh.addStyles = function() {
 		color:#AAAAAA;
 	}
 	</style>
-	END*/}).toString().replace(/[\s\S]*START|END[\s\S]*/g,""); 
+	END*/}).toString().replace(/[\s\S]*START|END[\s\S]*/g,"");
 	document.head.insertAdjacentHTML('afterbegin', style);
 	return "";
 };
@@ -94,7 +94,7 @@ xoHigh.viewSrc = function() {
 		var el=list[i];
 		var id=el.getAttribute("data-x-src");
 		var srcEl = document.getElementById(id);
-		var html=srcEl.outerHTML||dataX.outerHTML(srcEl);
+		var html=srcEl.outerHTML;
 		html=dataX.htmlEncode(html);
 		if (!el.hasAttribute("class"))el.className="xohi";
 		el.innerHTML=xoHigh(html);

@@ -85,22 +85,6 @@ DataX.prototype.enter = function(event) {
   return (key === 13) ? true : false;
 };
 
-
-/*
-  // srcPath - Retrurn the first path that ends with 'name'
-  dataX.srcPath = function(name) {
-    var els = document.getElementsByTagName('script'),
-      len = els.length,
-      re = new RegExp(name.replace('.','\\.')+ '$'),src;
-    while (len--) {
-      src = els[len].src;
-      if (src && src.match(re)) {
-        return src.replace(re,'');
-      }
-    }
-    return null;
-  };
-*/
 // dataX.set is used to update vars bound to a view.
 // dataBind(varName, val{optional}, skip{optional})
 // skip is used in forms when updating input so we can skip binding back.
@@ -581,55 +565,6 @@ DataX.prototype.ready = function(fn) {
   } else {
     this.readyQueue.push(fn);
   }
-};
-
-DataX.prototype.outerHTML = function(el){
-  if(el.outerHTML)return el.outerHTML;
-  if(typeof this.xser === "undefined") this.xser=new XMLSerializer();
-  return this.xser.serializeToString(el).replace(/ xmlns="[^"]*"/,"");
-};
-
-/*
-  dataX.ctrl = function(ns, obj) {
-    obj._ctrl_=ns; // used to replace _ctrl_ with the namespace
-    dataX.namespace(ns,obj);
-  };
-*/
-
-/*
-  gets data-attr from element or sets default value
-  the returned keys are camelCased with the data-
-  prefix removed. Example data-my-var="myValue"
-  returns as data.myVar="myValue"
-*/
-DataX.prototype.getData = function(el, defaults) {
-  if (this.isArray(defaults)) {
-    // set defaults to null
-    var temp = defaults
-    defaults = {}
-    for (var i=temp.length;i--;) defaults[temp[i]] = '';
-  }
-  var data = {};
-
-  for(k in defaults) {
-
-    if (el.hasAttribute(k)) {
-      var v = el.getAttribute(k);
-    } else {
-      var v = defaults[k];
-    }
-
-    k=k.substr(5).replace(/-(.)/g, function(m,$1){
-      return $1.toUpperCase();
-    });
-
-    data[k] = v;
-  }
-  return data;
-};
-
-DataX.prototype.isArray = function(obj) {
-  return (Object.prototype.toString.call(obj) === '[object Array]');
 };
 
 DataXException = function (message) {

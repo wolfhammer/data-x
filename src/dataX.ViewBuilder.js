@@ -448,10 +448,6 @@ ViewBuilder.viewTemplate = dataX.parse.tplFn(function() {
 	}
   };
 
-  TPL_namespace.prototype.getData = function(defaults) {
-	return dataX.getData(this.el, defaults);
-  };
-
   /*******************************
   * Translation
   *******************************/
