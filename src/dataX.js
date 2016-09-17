@@ -575,4 +575,4 @@ DataXException.prototype.toString = function() {
   return this.type + ': ' + this.message;
 };
 
-new DataX();
+var datax = new DataX();
