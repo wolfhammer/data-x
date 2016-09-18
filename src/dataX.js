@@ -40,7 +40,8 @@ function DataX() {
   this.readyQueue = [];
   this.lang = {};
 
-  window.dataX = this;
+  //window.dataX = this;
+  return this;
 }
 
 // parse dot notation into last object and key.
@@ -575,4 +576,4 @@ DataXException.prototype.toString = function() {
   return this.type + ': ' + this.message;
 };
 
-var datax = new DataX();
+var dataX = new DataX();
